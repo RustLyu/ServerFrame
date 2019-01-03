@@ -5,9 +5,6 @@ TcpConnection::TcpConnection(int fd, EventLoop* loop)
     fd_(fd),
     channel_(new Channel(loop, fd))
 {
-    // loop_ = loop;
-    // fd_ = fd;
-    // channel_ = new Channel(loop_, fd_);
     channel_->setReadCallBack(boost::bind(&TcpConnection::handRead, this, _1));
     channel_->setWriteCallBack(boost::bind(&TcpConnection::handWrite, this, _1));
 }

@@ -59,10 +59,21 @@ void Epoller::poller(ChannelList* polllist)
 {
     int timeout = 5;
     int count = epoll_wait(epollFd_, events_, EPOLL_FD_MAX, timeout);
+    if(count > 0)
+    {
+        fillActiveEvent(count, polllist);
+    }
 }
 
-void Epoller::fillActiveEvent()
+void Epoller::fillActiveEvent(int count, ChannelList* poll)
 {
+    for(int i = 0; i < count; ++i)
+    {
+        epoll_event ev = events_[i];
+        Channel* ch = static_cast<Channel*>(ev.data.ptr);
+        ch->setEvent(ev.events);
+        poll->push_back(ch);
+    }
 }
 
 // void Epoller::loop(int timeout)

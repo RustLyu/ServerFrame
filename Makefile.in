@@ -104,7 +104,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_Server_OBJECTS = Server.$(OBJEXT) Channel.$(OBJEXT) \
 	EventLoop.$(OBJEXT) Epoller.$(OBJEXT) TcpConnection.$(OBJEXT) \
-	Log.$(OBJEXT)
+	Log.$(OBJEXT) Acceptor.$(OBJEXT)
 Server_OBJECTS = $(am_Server_OBJECTS)
 Server_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -297,7 +297,8 @@ Server_SOURCES = \
             Epoller.cc Epoller.h\
             TcpConnection.cc TcpConnection.h\
             Log.cc Log.h\
-            CallBack.h
+            CallBack.h \
+            Acceptor.h Acceptor.cc
 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -405,6 +406,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Acceptor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Channel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Epoller.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/EventLoop.Po@am__quote@

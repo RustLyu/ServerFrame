@@ -31,7 +31,8 @@ public:
    //  {newConnectCb_ = call;}
     void poller(ChannelList* polllist);
     void enableRead(Channel* channel);
-    void fillActiveEvent();
+private:
+    void fillActiveEvent(int count, ChannelList* poll);
 private:
     int epollFd_;
     int size_;

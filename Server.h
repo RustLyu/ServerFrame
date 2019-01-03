@@ -13,6 +13,7 @@
 #include "Msg.h"
 #include "EventLoop.h"
 #include "Channel.h"
+#include "CallBack.h"
 
 union test
 {
@@ -57,16 +58,34 @@ class Server
         ~Server();
         void run();
         int getSocketFd()
-        {return serverFd_;}
+        {
+            return serverFd_;
+        }
+        void setReadCallBack(MessageCallBack& cb)
+        { 
+            msgCb_ = cb; 
+        }
+        void setWriteCallBack(WriteMessageCallBack& cb)
+        {
+            writeMsgCb_ = cb; 
+        }
+        void setConnectCallBack(NewConnectCallBack& cb)
+        {
+            connectCb_ = cb; 
+        }
         void messageCallFunc(int args);
         void newConnectCallFunc(int args);
+    private:
+        void removeConnection(int sockfd);
     private:
         int serverFd_, clientFd_;
         sockaddr_in serverAddr_, clientAddr_;
         std::map<int, int> userMap_;
         Channel* channel_;
         EventLoop* loop_;
+        MessageCallBack msgCb_;
+        WriteMessageCallBack writeMsgCb_;
+        NewConnectCallBack connectCb_;
 };
-
 
 #endif

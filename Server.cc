@@ -6,6 +6,9 @@
 #include "Msg.h"
 #include "Server.h"
 #include "Epoller.h"
+#include "EventLoop.h"
+#include "Acceptor.h"
+#include "TcpConnection.h"
 
 static void* recvMessage(void* arg)
 {
@@ -106,16 +109,34 @@ void Server::messageCallFunc(int sock_fd)
 
 void Server::newConnectCallFunc(int sock_fd)
 {
-    // TODO new TcpConnection
-    // int* sock_fd = (int*)arg;
-    std::cout << "new client come in:" << sock_fd << std::endl;
-    // char buf[4096];
-    RequestLoginCmd_CS msg;
-    char lsk[] = "looksmart";
-    memcpy(msg.name, lsk, sizeof(lsk));
-    msg.time = 20181017;
+    // // TODO new TcpConnection
+    // // int* sock_fd = (int*)arg;
+    // std::cout << "new client come in:" << sock_fd << std::endl;
+    // // char buf[4096];
+    // RequestLoginCmd_CS msg;
+    // char lsk[] = "looksmart";
+    // memcpy(msg.name, lsk, sizeof(lsk));
+    // msg.time = 20181017;
 
-    sendToMe(msg, sock_fd);
+    // sendToMe(msg, sock_fd);
+    EventLoop* ioLoop = new EventLoop();//threadPool_->getNextLoop();
+    char buf[64];
+    // string connName = name_ + buf;
+
+    // FIXME poll with zero timeout to double confirm the new connection
+    //   // FIXME use make_shared if necessary
+    TcpConnectionPtr conn(new TcpConnection(sock_fd, ioLoop));
+    conn->setConnectCallBack(connectCb_);
+    conn->setReadCallBack(msgCb_);
+    conn->setWriteCallBack(writeMsgCb_);
+    conn->setCloseCallback(
+            boost::bind(&Server::removeConnection, this, _1)); // FIXME: unsafe
+    // ioLoop->runInLoop(boost::bind(&TcpConnection::connectEstablished, conn));
+}
+
+void Server::removeConnection(int sockfd)
+{
+    close(sockfd);
 }
 
 Server::~Server()
@@ -125,14 +146,19 @@ Server::~Server()
 
 static void* creatServerInstance(void* args)
 {
-   //  Server* server = new Server("*", 6066);
-   //  std::cout << "start...." << std::endl;
-   //  Epoller* poller = new Epoller(server->getSocketFd());
-   //  poller->add(server->getSocketFd(), EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP);
-   //  poller->setNewConnectCallBack(boost::bind(&Server::newConnectCallFunc, server, _1));
-   //  poller->setMessageCallBack(boost::bind(&Server::messageCallFunc, server, _1));
-   //  // server->run();
-   //  poller->loop(5);
+    Server* server = new Server("*", 6066);
+    std::cout << "start...." << std::endl;
+    EventLoop* loop_ = new EventLoop();
+    Acceptor* accept_ = new Acceptor(loop_, server->getSocketFd());
+    accept_->setNewConnectCallBack(boost::bind(&Server::newConnectCallFunc, server, _1));
+    //Channel* acceptC_ = new Channel(loop_, server->getSocketFd());
+    //acceptC_->update();
+    //Epoller* poller = new Epoller(loop);
+    //poller->add(server->getSocketFd(), EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP);
+    //poller->setNewConnectCallBack(boost::bind(&Server::newConnectCallFunc, server, _1));
+    //poller->setMessageCallBack(boost::bind(&Server::messageCallFunc, server, _1));
+    // server->run();
+    loop_->loop();
 }
 
 int main()

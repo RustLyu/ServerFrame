@@ -11,5 +11,6 @@ typedef std::vector<Channel*> ChannelList;
 typedef boost::function<void (int)> MessageCallBack;
 typedef boost::function<void (int)> WriteMessageCallBack;
 typedef boost::function<void (int)> NewConnectCallBack;
+typedef boost::function<void (int)> RemoveConnectCallBack;
 
 #endif
