@@ -18,6 +18,7 @@ Epoller::Epoller(EventLoop* loop)
     if(epollFd_ == -1)
     {
         std::cout << "create epoll failed!" << std::endl;
+        ERROR("create epoll failed");
     }
 }
 
@@ -35,9 +36,9 @@ void Epoller::add2Loop(Channel* channel)
     ev.events = channel->getOp();//op->getOp();
     if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, channel->getFd(), &ev) == -1) 
     {
-        std::cout << "epoll_ctl: ADD FD Error: " << ev.data.fd <<  std::endl;
+        ERROR("epoll_ctl: ADD FD Error: " + ev.data.fd);
     }
-    std::cout << "epoll_ctl: ADD FD success : " << channel->getFd()  <<"|||||"<< epollFd_ <<  std::endl;
+    LOG("epoll_ctl: ADD FD success : " + std::to_string(channel->getFd()) +" EPOLLFD:"+ std::to_string(epollFd_));
 }
 
 void Epoller::enableRead(Channel* channel)
@@ -53,7 +54,7 @@ int Epoller::update(Channel* channel)
     ev.events = channel->getOp();
     if (epoll_ctl(epollFd_, EPOLL_CTL_MOD, channel->getFd(), &ev) == -1) 
     {
-        std::cout << "epoll_ctl: MODIFY FD Error: " << ev.data.fd <<  std::endl;
+        ERROR("epoll_ctl: MODIFY FD Error: " + ev.data.fd);
         return -1;
     }
     return 0;
@@ -63,8 +64,6 @@ void Epoller::poller(ChannelList* polllist)
 {
     int timeout = 5;
     int count = epoll_wait(epollFd_, events_, EPOLL_FD_MAX, timeout);
-    LOG("Watch fd");
-    LOG(epollFd_);
     // std::cout << "Watch fd: " << epollFd_ << std::endl;
     if(count > 0)
     {

@@ -1,8 +1,10 @@
+#include <iostream>
+#include <thread>
+
+#include "Log.h"
 #include "EventLoopThread.h"
 #include "Thread.h"
 #include "EventLoop.h"
-#include <iostream>
-#include <thread>
 
 
 EventLoopThread::EventLoopThread()
@@ -20,12 +22,12 @@ EventLoop* EventLoopThread::startLoop()
     MutexLockGuide lock(mutex_);
     while(loop_ == nullptr)
     {
-        std::cout << "wait signal" << std::endl;
+        //std::cout << "wait signal" << std::endl;
         std::thread::id tid = std::this_thread::get_id();
         cond_.wait();
     }
 
-    std::cout << "signal recv" << std::endl;
+    // std::cout << "signal recv" << std::endl;
     return loop_;
 }
 
@@ -40,7 +42,8 @@ void EventLoopThread::callFunc()
     }
     std::thread::id tid = std::this_thread::get_id();
 
-    std::cout << "start loop" << std::endl;
+    //std::cout << "start loop" << std::endl;
+    LOG("new thread start loop");
     loop.loop();
     loop_ = nullptr;
 }

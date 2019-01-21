@@ -27,6 +27,7 @@ class CLog
                 ofstream fout(LOG_FILE_NAME, ios::app);
                 fout.seekp(ios::end);
                 fout << GetSystemTime() << " [LOG] " << x << endl;
+                std::cout << GetSystemTime() << " [LOG] " << x << std::endl;
                 fout.close();
             }
 
@@ -36,6 +37,7 @@ class CLog
                 ofstream fout(LOG_FILE_NAME, ios::app);
                 fout.seekp(ios::end);
                 fout << GetSystemTime() << " [DEBUG] " << x << endl;
+                std::cout << GetSystemTime() << " [DEBUG] " << x << std::endl;
                 fout.close();
             }
 
@@ -45,6 +47,7 @@ class CLog
                 ofstream fout(LOG_FILE_NAME, ios::app);
                 fout.seekp(ios::end);
                 fout << GetSystemTime() << " [INFO] " << x << endl;
+                std::cout << GetSystemTime() << " [INFO] " << x << std::endl;
                 fout.close();
             }
 
@@ -54,6 +57,7 @@ class CLog
                 ofstream fout(LOG_FILE_NAME, ios::app);
                 fout.seekp(ios::end);
                 fout << GetSystemTime() << " [TRACE] " << x << endl;
+                std::cout << GetSystemTime() << " [TRACE] " << x << std::endl;
                 fout.close();
             }
 
@@ -63,6 +67,7 @@ class CLog
                 ofstream fout(LOG_FILE_NAME, ios::app);
                 fout.seekp(ios::end);
                 fout << GetSystemTime() << " [ERROR] " << x << endl;
+                std::cout << GetSystemTime() << " [ERROR] " << x << std::endl;
                 fout.close();
             }
 
@@ -72,6 +77,7 @@ class CLog
                 ofstream fout(LOG_FILE_NAME, ios::app);
                 fout.seekp(ios::end);
                 fout << GetSystemTime() << " [WARNING] " << x << endl;
+                std::cout << GetSystemTime() << " [WARNING] " << x << std::endl;
                 fout.close();
             }
 
