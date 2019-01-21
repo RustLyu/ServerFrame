@@ -10,6 +10,7 @@
 #include "Acceptor.h"
 #include "TcpConnection.h"
 #include "EventLoopThread.h"
+#include "Log.h"
 
 static void* recvMessage(void* arg)
 {
@@ -69,7 +70,7 @@ void Server::begin()
     {
         std::cout << "listen error" << std::endl;
     }
-    std::cout << "liten success" << std::endl;
+    LOG("Server listen socketfd:" + std::to_string(serverFd_));
 
 }
 
@@ -148,7 +149,8 @@ void Server::newConnectCallFunc(int sock_fd)
 
     // FIXME poll with zero timeout to double confirm the new connection
     //   // FIXME use make_shared if necessary
-    std::cout << "recv  fd: " << sock_fd << std::endl;
+    //std::cout << "recv  fd: " << sock_fd << std::endl;
+    LOG("Recv new client fd:" + std::to_string(sock_fd));
     //TcpConnectionPtr conn(new TcpConnection(sock_fd, ioLoop));
     TcpConnection* conn = new TcpConnection(sock_fd, ioLoop);
     conn->setConnectCallBack(connectCb_);
@@ -173,17 +175,18 @@ Server::~Server()
 static void* creatServerInstance(void* args)
 {
     Server* server = new Server("*", 6066);
-    std::cout << "start...." << std::endl;
+    //std::cout << "start...." << std::endl;
+    LOG("Server starting...");
     // EventLoopThread* loop_ = new EventLoopThread();
     // EventLoop* eloop = loop_->startLoop();
-	EventLoop* eloop = new EventLoop();
-    std::cout << "start loop...." << std::endl;
-    std::cout << server->getSocketFd() << std::endl;
+    EventLoop* eloop = new EventLoop();
+    //std::cout << "start loop...." << std::endl;
+    //std::cout << server->getSocketFd() << std::endl;
     Acceptor* accept_ = new Acceptor(eloop, server->getSocketFd());
     accept_->setNewConnectCallBack(boost::bind(&Server::newConnectCallFunc, server, _1));
     server->begin();
-    // for(;;)
-    // {}
+    //for(;;)
+    //{}
     //Channel* acceptC_ = new Channel(loop_, server->getSocketFd());
     //acceptC_->update();
     //Epoller* poller = new Epoller(loop);
@@ -191,7 +194,7 @@ static void* creatServerInstance(void* args)
     //poller->setNewConnectCallBack(boost::bind(&Server::newConnectCallFunc, server, _1));
     //poller->setMessageCallBack(boost::bind(&Server::messageCallFunc, server, _1));
     // server->run();
-    loop_->loop();
+    eloop->loop();
 }
 
 int main()

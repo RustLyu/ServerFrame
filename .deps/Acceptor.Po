@@ -379,7 +379,11 @@ Acceptor.o: Acceptor.cc /usr/include/stdc-predef.h \
  /usr/include/boost/bind/storage.hpp /usr/include/boost/bind/bind_cc.hpp \
  /usr/include/boost/bind/bind_mf_cc.hpp \
  /usr/include/boost/bind/bind_mf2_cc.hpp \
- /usr/include/boost/bind/placeholders.hpp EventLoop.h
+ /usr/include/boost/bind/placeholders.hpp EventLoop.h Log.h \
+ /usr/include/c++/7/fstream /usr/include/c++/7/bits/codecvt.h \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/basic_file.h \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/c++io.h \
+ /usr/include/c++/7/bits/fstream.tcc /usr/include/c++/7/ctime
 
 /usr/include/stdc-predef.h:
 
@@ -1288,3 +1292,17 @@ Channel.h:
 /usr/include/boost/bind/placeholders.hpp:
 
 EventLoop.h:
+
+Log.h:
+
+/usr/include/c++/7/fstream:
+
+/usr/include/c++/7/bits/codecvt.h:
+
+/usr/include/x86_64-linux-gnu/c++/7/bits/basic_file.h:
+
+/usr/include/x86_64-linux-gnu/c++/7/bits/c++io.h:
+
+/usr/include/c++/7/bits/fstream.tcc:
+
+/usr/include/c++/7/ctime:

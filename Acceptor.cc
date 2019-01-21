@@ -5,6 +5,7 @@
 #include "Acceptor.h"
 #include "EventLoop.h"
 #include "Channel.h"
+#include "Log.h"
 
 
 Acceptor::Acceptor(EventLoop* loop, int fd):
@@ -27,7 +28,8 @@ void Acceptor::handleRead()
     {
         if(cb_)
         {
-            std::cout << "Acceptor new client " << clientFD << std::endl;
+            //std::cout << "Acceptor new client " << clientFD << std::endl;
+            LOG("Acceptor Recv new Client" + std::to_string(clientFD));
             cb_(clientFD);
         }
         else

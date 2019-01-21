@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Thread.h"
+#include "Log.h"
 
 struct ThreadData
 {
@@ -47,7 +48,7 @@ void Thread::start()
     ThreadData* data = new ThreadData(call_);
     if(pthread_create(&tid_, NULL, startThread, data) != 0)
     {
-        std::cout << "create thread error" << std::endl;
+        ERROR("create thread error");
     }
-    std::cout << "create thread OK" << std::endl;
+    LOG("create thread OK");
 }

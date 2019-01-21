@@ -3,6 +3,7 @@
 #include <sys/socket.h>
 
 #include "TcpConnection.h"
+#include "Log.h"
 
 TcpConnection::TcpConnection(int fd, EventLoop* loop)
     :loop_(loop),
@@ -17,6 +18,7 @@ TcpConnection::TcpConnection(int fd, EventLoop* loop)
 TcpConnection::~TcpConnection()
 {
     std::cout << "close fd:" << fd_ << std::endl;
+    LOG("Close client fd:" + fd_);
     close(fd_);
 }
 
@@ -24,18 +26,19 @@ void TcpConnection::handRead(int fd)
 {
     // read msg from buffer 
     // call func
-    std::cout << "TcpConnection msg read" << std::endl;
+    LOG("TcpConnection msg read");
     char buf[1024];
     {
         int len = ::recv(fd, buf, 1024, 0);
         if(len > 0)
         {
-            std::cout << buf << std::endl;
+            //std::cout << buf << std::endl;
+            LOG(buf);
         }
         else
-        {
+   {
             channel_->disableAll();
-            std::cout << "Disconnect" << std::endl;
+            LOG("Disconnect");
         }
     }
     // msgCb_(fd);
@@ -45,6 +48,6 @@ void TcpConnection::handWrite(int fd)
 {
     // write msg 2 buffer
     // call
-    std::cout << "TcpConnection msg write" << std::endl;
+    LOG("TcpConnection msg write");
     // writeMsgCb_(fd);
 }
