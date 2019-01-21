@@ -174,15 +174,16 @@ static void* creatServerInstance(void* args)
 {
     Server* server = new Server("*", 6066);
     std::cout << "start...." << std::endl;
-    EventLoopThread* loop_ = new EventLoopThread();
-    EventLoop* eloop = loop_->startLoop();
+    // EventLoopThread* loop_ = new EventLoopThread();
+    // EventLoop* eloop = loop_->startLoop();
+	EventLoop* eloop = new EventLoop();
     std::cout << "start loop...." << std::endl;
     std::cout << server->getSocketFd() << std::endl;
     Acceptor* accept_ = new Acceptor(eloop, server->getSocketFd());
     accept_->setNewConnectCallBack(boost::bind(&Server::newConnectCallFunc, server, _1));
     server->begin();
-    for(;;)
-    {}
+    // for(;;)
+    // {}
     //Channel* acceptC_ = new Channel(loop_, server->getSocketFd());
     //acceptC_->update();
     //Epoller* poller = new Epoller(loop);
@@ -190,7 +191,7 @@ static void* creatServerInstance(void* args)
     //poller->setNewConnectCallBack(boost::bind(&Server::newConnectCallFunc, server, _1));
     //poller->setMessageCallBack(boost::bind(&Server::messageCallFunc, server, _1));
     // server->run();
-    // loop_->loop();
+    loop_->loop();
 }
 
 int main()
