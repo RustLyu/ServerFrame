@@ -9,6 +9,7 @@
 #include "EventLoop.h"
 #include "Acceptor.h"
 #include "TcpConnection.h"
+#include "EventLoopThread.h"
 
 static void* recvMessage(void* arg)
 {
@@ -36,10 +37,28 @@ static void* recvMessage(void* arg)
 Server::Server(std::string ip, int port)
 {
     serverFd_ = socket(AF_INET, SOCK_STREAM, 0);
+     //memset(&serverAddr_, 0, sizeof(serverAddr_));  
+     //serverAddr_.sin_family = AF_INET;  
+     //serverAddr_.sin_addr.s_addr = htonl(0);
+     //serverAddr_.sin_port = htons(port);
+     //bool bReuseaddr = true;
+     //setsockopt(serverFd_,SOL_SOCKET ,SO_REUSEADDR,(const char*)&bReuseaddr,sizeof(bool));
+     //if(bind(serverFd_, (struct sockaddr*)(&serverAddr_), sizeof(serverAddr_)) == -1)
+     //{
+     //    std::cout << "bind error" << std::endl;
+     //}
+     //if(listen(serverFd_, 100) == -1)
+     //{
+     //    std::cout << "listen error" << std::endl;
+     //}
+}
+
+void Server::begin()
+{
     memset(&serverAddr_, 0, sizeof(serverAddr_));  
     serverAddr_.sin_family = AF_INET;  
     serverAddr_.sin_addr.s_addr = htonl(0);
-    serverAddr_.sin_port = htons(port);
+    serverAddr_.sin_port = htons(6066);
     bool bReuseaddr = true;
     setsockopt(serverFd_,SOL_SOCKET ,SO_REUSEADDR,(const char*)&bReuseaddr,sizeof(bool));
     if(bind(serverFd_, (struct sockaddr*)(&serverAddr_), sizeof(serverAddr_)) == -1)
@@ -50,6 +69,8 @@ Server::Server(std::string ip, int port)
     {
         std::cout << "listen error" << std::endl;
     }
+    std::cout << "liten success" << std::endl;
+
 }
 
 void Server::run()
@@ -119,18 +140,23 @@ void Server::newConnectCallFunc(int sock_fd)
     // msg.time = 20181017;
 
     // sendToMe(msg, sock_fd);
-    EventLoop* ioLoop = new EventLoop();//threadPool_->getNextLoop();
-    char buf[64];
+    // EventLoop* ioLoop = new EventLoop();//threadPool_->getNextLoop();
+    EventLoopThread* loop_ = new EventLoopThread();
+    EventLoop* ioLoop = loop_->startLoop();
+    //char buf[64];
     // string connName = name_ + buf;
 
     // FIXME poll with zero timeout to double confirm the new connection
     //   // FIXME use make_shared if necessary
-    TcpConnectionPtr conn(new TcpConnection(sock_fd, ioLoop));
+    std::cout << "recv  fd: " << sock_fd << std::endl;
+    //TcpConnectionPtr conn(new TcpConnection(sock_fd, ioLoop));
+    TcpConnection* conn = new TcpConnection(sock_fd, ioLoop);
     conn->setConnectCallBack(connectCb_);
     conn->setReadCallBack(msgCb_);
     conn->setWriteCallBack(writeMsgCb_);
     conn->setCloseCallback(
             boost::bind(&Server::removeConnection, this, _1)); // FIXME: unsafe
+    // ioLoop->loop();
     // ioLoop->runInLoop(boost::bind(&TcpConnection::connectEstablished, conn));
 }
 
@@ -148,9 +174,15 @@ static void* creatServerInstance(void* args)
 {
     Server* server = new Server("*", 6066);
     std::cout << "start...." << std::endl;
-    EventLoop* loop_ = new EventLoop();
-    Acceptor* accept_ = new Acceptor(loop_, server->getSocketFd());
+    EventLoopThread* loop_ = new EventLoopThread();
+    EventLoop* eloop = loop_->startLoop();
+    std::cout << "start loop...." << std::endl;
+    std::cout << server->getSocketFd() << std::endl;
+    Acceptor* accept_ = new Acceptor(eloop, server->getSocketFd());
     accept_->setNewConnectCallBack(boost::bind(&Server::newConnectCallFunc, server, _1));
+    server->begin();
+    for(;;)
+    {}
     //Channel* acceptC_ = new Channel(loop_, server->getSocketFd());
     //acceptC_->update();
     //Epoller* poller = new Epoller(loop);
@@ -158,7 +190,7 @@ static void* creatServerInstance(void* args)
     //poller->setNewConnectCallBack(boost::bind(&Server::newConnectCallFunc, server, _1));
     //poller->setMessageCallBack(boost::bind(&Server::messageCallFunc, server, _1));
     // server->run();
-    loop_->loop();
+    // loop_->loop();
 }
 
 int main()

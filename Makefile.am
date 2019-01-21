@@ -9,4 +9,9 @@ Server_SOURCES=\
             TcpConnection.cc TcpConnection.h\
             Log.cc Log.h\
             CallBack.h \
-            Acceptor.h Acceptor.cc
+            Acceptor.h Acceptor.cc\
+			Thread.h Thread.cc\
+			Mutex.h\
+			Condition.h\
+			EventLoopThread.cc EventLoopThread.h\
+			EventLoopThreadPool.cc EventLoopThreadPool.h

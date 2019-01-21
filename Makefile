@@ -104,7 +104,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_Server_OBJECTS = Server.$(OBJEXT) Channel.$(OBJEXT) \
 	EventLoop.$(OBJEXT) Epoller.$(OBJEXT) TcpConnection.$(OBJEXT) \
-	Log.$(OBJEXT) Acceptor.$(OBJEXT)
+	Log.$(OBJEXT) Acceptor.$(OBJEXT) Thread.$(OBJEXT) \
+	EventLoopThread.$(OBJEXT) EventLoopThreadPool.$(OBJEXT)
 Server_OBJECTS = $(am_Server_OBJECTS)
 Server_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
@@ -298,7 +299,12 @@ Server_SOURCES = \
             TcpConnection.cc TcpConnection.h\
             Log.cc Log.h\
             CallBack.h \
-            Acceptor.h Acceptor.cc
+            Acceptor.h Acceptor.cc\
+			Thread.h Thread.cc\
+			Mutex.h\
+			Condition.h\
+			EventLoopThread.cc EventLoopThread.h\
+			EventLoopThreadPool.cc EventLoopThreadPool.h
 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -410,9 +416,12 @@ include ./$(DEPDIR)/Acceptor.Po
 include ./$(DEPDIR)/Channel.Po
 include ./$(DEPDIR)/Epoller.Po
 include ./$(DEPDIR)/EventLoop.Po
+include ./$(DEPDIR)/EventLoopThread.Po
+include ./$(DEPDIR)/EventLoopThreadPool.Po
 include ./$(DEPDIR)/Log.Po
 include ./$(DEPDIR)/Server.Po
 include ./$(DEPDIR)/TcpConnection.Po
+include ./$(DEPDIR)/Thread.Po
 
 .cc.o:
 	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

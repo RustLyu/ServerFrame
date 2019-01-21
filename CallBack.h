@@ -12,5 +12,6 @@ typedef boost::function<void (int)> MessageCallBack;
 typedef boost::function<void (int)> WriteMessageCallBack;
 typedef boost::function<void (int)> NewConnectCallBack;
 typedef boost::function<void (int)> RemoveConnectCallBack;
+typedef boost::function<void ()> ThreadCB;
 
 #endif

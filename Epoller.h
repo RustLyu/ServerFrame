@@ -22,7 +22,7 @@ class Epoller
 public:
     Epoller(EventLoop* loop);
     ~Epoller();
-    void updateChannel(Channel* channel);
+    void add2Loop(Channel* channel);
     int update(Channel* channel);
     // void loop(int timeout);
    //  void setMessageCallBack(const MessageCallBack& call)

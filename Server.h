@@ -7,7 +7,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
-// #include <stdlib.h>
 #include <map>
 
 #include "Msg.h"
@@ -75,6 +74,8 @@ class Server
         }
         void messageCallFunc(int args);
         void newConnectCallFunc(int args);
+    public: 
+        void begin();
     private:
         void removeConnection(int sockfd);
     private:

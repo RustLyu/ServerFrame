@@ -10,9 +10,11 @@ public:
     EventLoop();
     ~EventLoop();
     void loop();
-    void updateChannel(Channel* channel);
+    void add2Loop(Channel* channel);
+    void update(Channel* channel);
 private:
     Epoller* poller_;
+    int a_;
 };
 
 #endif

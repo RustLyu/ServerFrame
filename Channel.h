@@ -19,10 +19,12 @@ class Channel
         void handlEvent();
         void enableRead()
         {
-            op_ |= EPOLLIN; 
-            update();
+            op_ |= EPOLLIN;
+            op_ |= EPOLLPRI;
+            add2Loop();
         }
-        void update();
+        void add2Loop();
+        void updateChannel();
         void setReadCallBack(const ReadCallBack& cb)
         {
             readCB_ = cb;
@@ -42,6 +44,11 @@ class Channel
         void setEvent(int event)
         {
             op_ = event;
+        }
+        void disableAll()
+        {
+            op_ = 0;
+            updateChannel();
         }
     private:
         int fd_;

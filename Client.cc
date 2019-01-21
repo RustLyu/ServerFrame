@@ -24,6 +24,9 @@ void Client::run()
     if(ret = connect(my_fd, (struct sockaddr*)(&server_sock), sizeof(server_sock)) != -1)
     {
         std::cout << "connect server success" << std::endl;
+        std::string kk = "1111111111222222222222222";
+        int sendlen = send(my_fd, kk.c_str(), sizeof(kk), 0);
+        std::cout << sendlen << std::endl;
         for(;;)
         {
             // TODO 消息拆包,合包
@@ -47,6 +50,11 @@ void Client::run()
                     }
                     // isMsg = xxx  // 根据缓冲区判断
                 }
+            }
+            else if(len == 0)
+            {
+                std::cout << "disconnect" << std::endl;
+                return;
             }
         }
     }

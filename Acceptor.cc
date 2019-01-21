@@ -1,5 +1,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <iostream>
 
 #include "Acceptor.h"
 #include "EventLoop.h"
@@ -16,7 +17,8 @@ Acceptor::Acceptor(EventLoop* loop, int fd):
 }
 
 Acceptor::~Acceptor()
-{}
+{
+}
 
 void Acceptor::handleRead()
 {
@@ -25,6 +27,7 @@ void Acceptor::handleRead()
     {
         if(cb_)
         {
+            std::cout << "Acceptor new client " << clientFD << std::endl;
             cb_(clientFD);
         }
         else
