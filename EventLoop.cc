@@ -8,15 +8,18 @@ EventLoop::EventLoop()
 {
     a += 1;
     a_ = a;
+    quit_ = false;
     poller_ = new Epoller(this);
 }
 
 EventLoop::~EventLoop()
-{}
+{
+    delete poller_;
+}
 
 void EventLoop::loop()
 {
-    for(;;)
+    while(!quit_)
     {
         // std::cout << "index: " << a_ << std::endl;
         ChannelList event;

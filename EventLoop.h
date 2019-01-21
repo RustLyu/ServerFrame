@@ -12,9 +12,12 @@ public:
     void loop();
     void add2Loop(Channel* channel);
     void update(Channel* channel);
+    void setQuit(bool status)
+    { quit_ = status; }
 private:
     Epoller* poller_;
     int a_;
+    bool quit_;
 };
 
 #endif

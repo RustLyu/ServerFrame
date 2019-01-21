@@ -13,6 +13,7 @@
 #include "EventLoop.h"
 #include "Channel.h"
 #include "CallBack.h"
+#include "TcpConnection.h"
 
 union test
 {
@@ -87,6 +88,7 @@ class Server
         MessageCallBack msgCb_;
         WriteMessageCallBack writeMsgCb_;
         NewConnectCallBack connectCb_;
+        std::map<int, TcpConnection*> clientMap_;
 };
 
 #endif

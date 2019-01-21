@@ -2,6 +2,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <map>
 
 #include "Msg.h"
 #include "Server.h"
@@ -158,13 +159,27 @@ void Server::newConnectCallFunc(int sock_fd)
     conn->setWriteCallBack(writeMsgCb_);
     conn->setCloseCallback(
             boost::bind(&Server::removeConnection, this, _1)); // FIXME: unsafe
+    if(clientMap_.find(sock_fd) != clientMap_.end())
+    {
+        WARNING("Client duplicate");
+    }
+    else
+    {
+        clientMap_.insert(std::pair<int, TcpConnection*>(sock_fd, conn));
+    }
     // ioLoop->loop();
     // ioLoop->runInLoop(boost::bind(&TcpConnection::connectEstablished, conn));
 }
 
 void Server::removeConnection(int sockfd)
 {
-    close(sockfd);
+    auto it = clientMap_.find(sockfd);
+    if(it != clientMap_.end())
+    {
+        clientMap_.erase(it);
+        delete it->second;
+    }
+    //close(sockfd);
 }
 
 Server::~Server()

@@ -36,7 +36,8 @@ void TcpConnection::handRead(int fd)
             LOG(buf);
         }
         else
-   {
+        {
+            loop_->setQuit(true);
             channel_->disableAll();
             LOG("Disconnect");
         }
