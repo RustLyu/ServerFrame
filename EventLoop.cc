@@ -3,11 +3,8 @@
 #include "Epoller.h"
 #include "Channel.h"
 
-int a = 0;
 EventLoop::EventLoop()
 {
-    a += 1;
-    a_ = a;
     quit_ = false;
     poller_ = new Epoller(this);
 }

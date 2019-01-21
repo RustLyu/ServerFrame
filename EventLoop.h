@@ -16,7 +16,6 @@ public:
     { quit_ = status; }
 private:
     Epoller* poller_;
-    int a_;
     bool quit_;
 };
 
