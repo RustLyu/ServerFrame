@@ -16,18 +16,14 @@ EventLoop::~EventLoop()
 
 void EventLoop::loop()
 {
-    for(;;)
+    while(!quit_)
     {
-        if(!quit_)
-        {
-            // std::cout << "index: " << a_ << std::endl;
-            ChannelList event;
-            poller_->poller(&event);
-            for(auto it : event)        
-            {
-                it->handlEvent();
-            }
-        }
+		ChannelList event;
+		poller_->poller(&event);
+		for(auto it : event)        
+		{
+			it->handlEvent();
+		}
     }
 }
 
